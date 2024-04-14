@@ -1,0 +1,3 @@
+[submodule "BetaSuite"]
+	path = BetaSuite
+	url = https://github.com/anatoidea/BetaSuite

@@ -1,0 +1,6 @@
+FROM betasuite-base
+
+RUN pip install opencv-python onnxruntime-rocm
+RUN apt install -y ffmpeg
+
+WORKDIR /betasuite/BetaSuite
