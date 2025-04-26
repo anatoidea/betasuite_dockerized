@@ -18,7 +18,7 @@ Now build the betasuite image. If you have an Nvidia card, I don't have an answe
 
 `docker build -t betasuite -f dockerfiles/Dockerfile.rocm .`
 
-Configure `BetaSuite/betaconfig.py` as needed. You'll want to at least change the `providers` line and the `ffmpeg_path` and `ffprobe_path` lines.
+Configure `BetaSuite/betaconfig.py` as needed.
 
 Download the NudeNet model and place it in the `model` folder. [instructions](https://github.com/anatoidea/BetaSuite/tree/main#:~:text=Download%20NudeNet%20neural%20net%20model)
 
