@@ -1,6 +1,13 @@
-FROM betasuite-base
+# FROM betasuite-base
+FROM rocm/onnxruntime
 
-RUN pip install opencv-python onnxruntime-rocm
-RUN apt install -y ffmpeg
+
+RUN pip install mss onnxruntime-rocm xxhash
+RUN apt-get update
+
+## Some dependency pops open a TUI to get you to set the region.
+## This environment variable manages to skip it.
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get install -y ffmpeg python3-opencv python3-xlib
 
 WORKDIR /betasuite/BetaSuite

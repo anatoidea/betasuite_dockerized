@@ -1,9 +1,8 @@
 # Dockerization of BetaSuite
 
-See https://github.com/solarorb93/BetaSuite for BetaSuite's original configuration and usage.
+Dockerization of https://github.com/anatoidea/BetaSuite
 
-I have some updates at https://github.com/anatoidea/BetaSuite that aren't (yet) merged in.
-
+(Originally based on https://github.com/solarorb93/BetaSuite)
 
 I've tested this on Linux with an AMD graphics card, but this should serve as a good starting point for other operating systems (with Docker) and other hardware.
 
@@ -14,24 +13,16 @@ After cloning this repo,
 
 `git submodule update --init`
 
-Depending on what graphics hardware you have, you'll need to modify these instructions slightly. Choose the corresponding onnxruntime Dockerfile for your hardware. I'm using `Dockerfile.rocm`. I've included the `Dockerfile.cuda` file in this repo, but https://github.com/microsoft/onnxruntime/tree/main/dockerfiles has more.
 
-Build the onnxruntime base image:
-
-`docker build -t betasuite-base -f onnxruntime_dockerfiles/Dockerfile.rocm onnxruntime_dockerfiles`
-
-This may take a long time...
-
-Now build the betasuite image:
+Now build the betasuite image. If you have an Nvidia card, I don't have an answer yet. Check the Outdated section below.
 
 `docker build -t betasuite -f dockerfiles/Dockerfile.rocm .`
 
 Configure `BetaSuite/betaconfig.py` as needed. You'll want to at least change the `providers` line and the `ffmpeg_path` and `ffprobe_path` lines.
 
-Download the NudeNet model and place it in the `model` folder. 
+Download the NudeNet model and place it in the `model` folder. [instructions](https://github.com/anatoidea/BetaSuite/tree/main#:~:text=Download%20NudeNet%20neural%20net%20model)
 
-
-And run it! This is the line for ROCm on Linux. (Check https://github.com/microsoft/onnxruntime/tree/main/dockerfiles for instructions for other setups.)
+And run it! This is the line for ROCm on Linux.
 
 `docker run -it --device=/dev/kfd --device=/dev/dri --group-add video -v .:/betasuite betasuite python3 betastare.py`
 
@@ -39,3 +30,39 @@ or
 
 `docker run -it --device=/dev/kfd --device=/dev/dri --group-add video -v .:/betasuite betasuite python3 betatv.py`
 
+
+And for BetaVision:
+
+```
+xhost +
+docker run -it --device=/dev/kfd --device=/dev/dri --group-add video -v .:/betasuite --env="DISPLAY" --net=host --shm-size=1GB betasuite
+```
+
+Then
+
+```
+python3 betavision.py
+```
+
+If you need another terminal in the same container
+```
+running_betasuite="$(docker ps -qf "ancestor=betasuite")"
+docker exec -it "$running_betasuite" bash
+
+```
+
+
+
+# Outdated
+
+## Manually building the onnxruntime container
+
+This shouldn't be needed. Just base the containers off of the ones on Docker Hub
+
+If you need the dockerfiles to manually build the base: https://github.com/microsoft/onnxruntime/tree/main/dockerfiles
+
+Build the onnxruntime base image:
+
+`docker build -t betasuite-base -f onnxruntime_dockerfiles/Dockerfile.rocm onnxruntime_dockerfiles`
+
+This may take a long time...

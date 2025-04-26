@@ -1,6 +1,0 @@
-FROM betasuite-base
-
-RUN pip install opencv-python onnxruntime-gpu
-RUN apt install -y ffmpeg
-
-WORKDIR /betasuite/BetaSuite
